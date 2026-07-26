@@ -13,7 +13,7 @@ Every leaderboard measures something different on a different scale, so
 comparing them by eye is guesswork. This project normalises them, weights them
 by what you actually need a model for, and says how much to trust the result.
 
-- **One index across four sources** — 53 benchmarks, 6 arenas, live prices.
+- **One index across three sources** — 53 benchmarks, 6 arenas, live prices.
 - **Task presets** — coding, agents, research, maths, chat, vision, cheap-at-scale.
   Each re-weights the categories and re-ranks everything in the browser.
 - **Custom weights** — set your own per-category weights and the ranking follows.
@@ -32,7 +32,11 @@ by what you actually need a model for, and says how much to trust the result.
 | [Epoch AI Benchmarking Hub](https://epoch.ai/benchmarks) | 53 benchmarks + the Epoch Capabilities Index | CC BY 4.0 |
 | [LMArena](https://arena.ai/leaderboard/text) via the [official HF dataset](https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset) | Blind pairwise human votes as Elo, 6 arenas | CC BY 4.0 |
 | [OpenRouter](https://openrouter.ai/models) | Pricing, context windows, modalities, capabilities | Public API |
-| [Artificial Analysis](https://artificialanalysis.ai/) | Intelligence Index, throughput, latency | Data API (optional key) |
+
+A source only earns a place here if its terms allow republishing what it
+provides. Artificial Analysis was evaluated and left out for that reason: its
+free Data API tier is *"internal use only; no redistribution"*, and this site is
+public. The three above cover every part of the index on their own.
 
 ## How the index works
 
@@ -89,9 +93,8 @@ First-time setup on a fresh fork:
 1. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 2. Point DNS at GitHub Pages — a `CNAME` record for the subdomain to
    `<owner>.github.io.`
-3. Optionally add an `AA_API_KEY` repository secret ([free
-   tier](https://artificialanalysis.ai/data-api)) to enable the Artificial
-   Analysis panel. Everything else works without it.
+
+No secrets or API keys are required. Every source is public.
 
 ## Licence
 

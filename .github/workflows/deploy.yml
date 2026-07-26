@@ -51,10 +51,6 @@ jobs:
       - run: npm run typecheck
 
       - name: Collect leaderboard data
-        env:
-          # Optional. Without it the Artificial Analysis panel is simply absent;
-          # the other three sources carry the site on their own.
-          AA_API_KEY: ${{ secrets.AA_API_KEY }}
         run: npm run collect
 
       - run: npm run build

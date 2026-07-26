@@ -36,7 +36,6 @@ const OFFLINE = process.argv.includes('--offline');
 const EPOCH_ZIP = 'https://epoch.ai/data/benchmark_data.zip';
 const OPENROUTER = 'https://openrouter.ai/api/v1/models';
 const HF = 'https://datasets-server.huggingface.co';
-const AA = 'https://artificialanalysis.ai/api/v2/language/models/free';
 
 /** Models older than this are historical context, not buying advice. */
 const MODERN_CUTOFF = '2025-01-01';
@@ -328,32 +327,6 @@ async function loadArenas() {
   return out;
 }
 
-/** Artificial Analysis — optional, needs a free key in `AA_API_KEY`. */
-async function loadArtificialAnalysis() {
-  const key = process.env.AA_API_KEY;
-  if (!key) { log('Artificial Analysis: no AA_API_KEY, skipping'); return null; }
-  try {
-    const res = await grab(AA, { key: 'aa.json', headers: { 'x-api-key': key } });
-    const rows = res.data ?? res.models ?? [];
-    log(`Artificial Analysis: ${rows.length} models`);
-    return rows.map((m) => ({
-      slug: slugify(m.slug ?? m.name),
-      name: m.name,
-      creator: m.model_creator?.name ?? '',
-      released: m.release_date ?? null,
-      intelligence: m.evaluations?.artificial_analysis_intelligence_index ?? null,
-      coding: m.evaluations?.artificial_analysis_coding_index ?? null,
-      math: m.evaluations?.artificial_analysis_math_index ?? null,
-      speed: m.performance?.median_output_tokens_per_second ?? null,
-      latency: m.performance?.median_time_to_first_token_seconds ?? null,
-      orId: m.openrouter_api_id ?? null,
-    }));
-  } catch (err) {
-    warn(`Artificial Analysis: ${err.message}`);
-    return null;
-  }
-}
-
 // ── Aggregation ──────────────────────────────────────────────────────────────
 
 /**
@@ -381,7 +354,6 @@ function buildRegistry(or, epoch, arenas) {
     sources: new Set(),
     openrouter: null,
     eci: null,
-    aa: null,
   });
 
   // Newest first, so that when date-pinned snapshots collapse onto one slug
@@ -464,26 +436,6 @@ function buildRegistry(or, epoch, arenas) {
   }
 
   return models;
-}
-
-/** Attach Artificial Analysis rows by OpenRouter id first, then by slug. */
-function attachAA(models, aa) {
-  if (!aa) return;
-  const byOr = new Map();
-  for (const rec of models.values()) {
-    if (rec.openrouter) byOr.set(rec.openrouter.orId, rec);
-  }
-  const canonical = new Set(models.keys());
-  for (const row of aa) {
-    let rec = row.orId ? byOr.get(row.orId) : null;
-    if (!rec) {
-      const id = resolve(row.slug, canonical);
-      rec = id ? models.get(id) : null;
-    }
-    if (!rec) continue;
-    rec.aa = row;
-    rec.sources.add('aa');
-  }
 }
 
 /**
@@ -702,13 +654,6 @@ function serializeDetail(m, benchRanks) {
   }
   if (Object.keys(ar).length) out.ar = ar;
 
-  if (m.aa) {
-    out.aa = {
-      i: round(m.aa.intelligence, 1),
-      s: round(m.aa.speed, 1),
-      l: round(m.aa.latency, 2),
-    };
-  }
   return Object.keys(out).length ? out : null;
 }
 
@@ -736,10 +681,8 @@ async function main() {
   const started = Date.now();
   await mkdir(OUT, { recursive: true });
 
-  const results = await Promise.allSettled([
-    loadEpoch(), loadOpenRouter(), loadArenas(), loadArtificialAnalysis(),
-  ]);
-  const [epochR, orR, arenaR, aaR] = results;
+  const results = await Promise.allSettled([loadEpoch(), loadOpenRouter(), loadArenas()]);
+  const [epochR, orR, arenaR] = results;
   const health = [];
 
   if (epochR.status !== 'fulfilled') throw new Error(`Epoch AI failed: ${epochR.reason?.message}`);
@@ -748,15 +691,12 @@ async function main() {
   const epoch = epochR.value;
   const or = orR.value;
   const arenas = arenaR.status === 'fulfilled' ? arenaR.value : new Map();
-  const aa = aaR.status === 'fulfilled' ? aaR.value : null;
 
   health.push({ id: 'epoch', ok: true, n: epoch.benches.size });
   health.push({ id: 'openrouter', ok: true, n: or.length });
   health.push({ id: 'lmarena', ok: arenas.size > 0, n: arenas.size });
-  health.push({ id: 'aa', ok: Boolean(aa), n: aa?.length ?? 0 });
 
   const models = buildRegistry(or, epoch, arenas);
-  attachAA(models, aa);
   const { list: scored, prior } = score(models);
   const list = analyse(scored);
 
