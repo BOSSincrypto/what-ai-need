@@ -288,10 +288,4 @@ export const SOURCES = [
     en: 'Live pricing, context windows, modalities and capabilities.',
     ru: 'Актуальные цены, окна контекста, модальности и возможности.',
   },
-  {
-    id: 'aa', name: 'Artificial Analysis', url: 'https://artificialanalysis.ai/',
-    license: 'Data API', licenseUrl: 'https://artificialanalysis.ai/data-api',
-    en: 'Intelligence Index plus measured throughput and latency.',
-    ru: 'Intelligence Index плюс измеренные скорость и задержка.',
-  },
 ];

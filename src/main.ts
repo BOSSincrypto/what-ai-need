@@ -153,7 +153,7 @@ function confPips(cf: number): HTMLElement {
 }
 
 function sourceDots(src: string[]): HTMLElement {
-  const all = ['epoch', 'lmarena', 'openrouter', 'aa'];
+  const all = ['epoch', 'lmarena', 'openrouter'];
   return h('span', { class: 'srcs' }, ...all
     .filter((s) => src.includes(s))
     .map((s) => h('i', { class: `src src-${s}`, title: s })));
@@ -739,7 +739,6 @@ function showSheet(m: Model) {
       h('div', {}, h('b', {}, m.pb == null ? '—' : fmtPrice(m.pb)), h('span', {}, `${t('price')}${t('perMillion')}`)),
       h('div', {}, h('b', {}, fmtTokens(m.ctx)), h('span', {}, t('context'))),
       m.eci != null && h('div', {}, h('b', {}, String(m.eci)), h('span', {}, 'Epoch ECI')),
-      m.aa?.i != null && h('div', {}, h('b', {}, String(m.aa.i)), h('span', {}, 'AA Index')),
     ),
 
     h('p', { class: 'detail-cov' },

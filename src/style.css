@@ -310,7 +310,7 @@ button { cursor: pointer; }
 .srcs { display: inline-flex; gap: 3px; }
 .src { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .src-epoch { background: var(--s1); } .src-lmarena { background: var(--s2); }
-.src-openrouter { background: var(--s3); } .src-aa { background: var(--s4); }
+.src-openrouter { background: var(--s3); }
 
 .empty { text-align: center; padding: 40px; }
 
@@ -354,7 +354,10 @@ button { cursor: pointer; }
  * every bar's left edge and quietly destroys the only thing a bar chart is
  * for — comparing lengths against a shared baseline.
  */
-.bars { display: grid; grid-template-columns: minmax(90px, .8fr) 3fr auto; gap: 6px 10px; align-items: center; font-size: .85rem; }
+/* `auto` on the label column sizes it to the longest label when there is room
+ * and still shrinks under pressure — a fractional width truncated category
+ * names ("Reasoning & Kn…") in the narrower detail sheet. */
+.bars { display: grid; grid-template-columns: minmax(90px, auto) minmax(0, 3fr) auto; gap: 6px 10px; align-items: center; font-size: .85rem; }
 .bar-row { display: contents; }
 .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bar-track { height: 14px; background: var(--grid); border-radius: 3px; overflow: hidden; }
@@ -362,7 +365,7 @@ button { cursor: pointer; }
 .bar-value { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
 .bar-value small { color: var(--muted); margin-left: 5px; }
 
-.diverge { display: grid; grid-template-columns: minmax(90px, .9fr) 2.4fr auto; gap: 6px 10px; align-items: center; font-size: .85rem; }
+.diverge { display: grid; grid-template-columns: minmax(90px, auto) minmax(0, 2.4fr) auto; gap: 6px 10px; align-items: center; font-size: .85rem; }
 .dv-row { display: contents; cursor: pointer; }
 .dv-label {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

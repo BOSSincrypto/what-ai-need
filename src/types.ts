@@ -34,11 +34,10 @@ export interface Model {
   /** Merged in from `details.json` once it has been fetched. */
   bs?: Record<string, [number, number, number | null, number | null]>;  // [raw, norm, rank, of]
   ar?: Record<string, [number, number, number, number]>;  // arena → [elo, votes, rank, norm]
-  aa?: { i: number | null; s: number | null; l: number | null };
 }
 
 /** `details.json`: score breakdowns, loaded on demand. */
-export type Details = Record<string, Pick<Model, 'bs' | 'ar' | 'aa'>>;
+export type Details = Record<string, Pick<Model, 'bs' | 'ar'>>;
 
 export interface Category { id: string; w: number; en: string; ru: string }
 
