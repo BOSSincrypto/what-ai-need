@@ -257,6 +257,13 @@ export function fmtPrice(p: number | undefined | null): string {
   return `$${Math.round(p)}`;
 }
 
+/** Numeric date for the KPI tile, where "26 июл. 2026 г." wraps to two lines. */
+export const fmtDateShort = (iso: string | null | undefined) =>
+  !iso ? '—' : new Date(`${iso}T00:00:00Z`).toLocaleDateString(
+    current === 'ru' ? 'ru-RU' : 'en-US',
+    { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' },
+  );
+
 export const fmtDate = (iso: string | null | undefined) =>
   !iso ? '—' : new Date(`${iso}T00:00:00Z`).toLocaleDateString(
     current === 'ru' ? 'ru-RU' : 'en-US',

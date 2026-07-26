@@ -9,7 +9,7 @@
 
 import './style.css';
 import type { Details, Lang, Meta, Model, Timeline } from './types';
-import { t, loc, setLang, getLang, fmt, fmtPrice, fmtTokens, fmtDate, type Key } from './i18n';
+import { t, loc, setLang, getLang, fmt, fmtPrice, fmtTokens, fmtDate, fmtDateShort, type Key } from './i18n';
 import { h, mount, $, debounce } from './dom';
 import {
   rescore, applyFilters, rankAndTier, picks, vendorList, defaultFilters, isOpen,
@@ -249,7 +249,7 @@ function renderStats(): HTMLElement {
     cell(fmt(c.benchmarks), t('statBenchmarks')),
     cell(fmt(c.arenas), t('statArenas')),
     cell(fmt(c.vendors), t('statVendors')),
-    cell(fmtDate(state.meta.dataDate), t('updated')),
+    cell(fmtDateShort(state.meta.dataDate), t('updated')),
   );
 }
 
