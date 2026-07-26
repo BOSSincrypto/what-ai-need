@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>what AI need — все рейтинги LLM в одном месте</title>
+<meta name="description" content="Агрегатор рейтингов языковых моделей: 40+ бенчмарков Epoch AI, арены LMArena, цены OpenRouter. Единый индекс, фильтры, аналитика цена/качество. Обновляется дважды в сутки.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://what-ai-need.bossincrypto.dev/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="what AI need — все рейтинги LLM в одном месте">
+<meta property="og:description" content="40+ бенчмарков, 6 арен и живые цены, сведённые в один сопоставимый индекс.">
+<meta property="og:url" content="https://what-ai-need.bossincrypto.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/data/models.json" as="fetch" crossorigin>
+<link rel="preload" href="/data/meta.json" as="fetch" crossorigin>
+<link rel="prefetch" href="/data/details.json" as="fetch" crossorigin>
+</head>
+<body>
+<a class="skip" href="#board">К таблице</a>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◒</span>
+      <span class="brand-text">
+        <b>what AI need</b>
+        <small data-i18n="tagline">Все рейтинги LLM в одном месте</small>
+      </span>
+    </div>
+    <div class="head-tools">
+      <div class="seg" id="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="ru">RU</button><button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" class="icon-btn" id="theme-btn" aria-label="Theme"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="app" class="wrap">
+  <p class="boot" id="boot">Загрузка данных…</p>
+</main>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

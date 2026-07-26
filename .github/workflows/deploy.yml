@@ -1,0 +1,87 @@
+name: Build & deploy
+
+on:
+  push:
+    branches: [main]
+  # Build-only on pull requests. Collecting from live sources is the step most
+  # likely to break — an upstream schema change surfaces here rather than after
+  # a merge has already gone out to the site.
+  pull_request:
+    branches: [main]
+  # Twice a day. Epoch AI refreshes its export daily and LMArena publishes new
+  # Elo roughly weekly, so more often than this would mostly redeploy identical
+  # bytes; less often and a new frontier model could sit missing for a day.
+  # Offset from the hour because scheduled runs queue behind everyone else's.
+  schedule:
+    - cron: '25 5,17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancel a running deploy: a half-published Pages site is worse than a
+# slightly stale one, and these runs are minutes apart at worst.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      # The collector falls back to its last good copy of any source that fails.
+      # Restoring that directory is what makes the fallback work across runs —
+      # without it a single upstream outage takes a whole section off the site.
+      - name: Restore upstream snapshots
+        uses: actions/cache@v6
+        with:
+          path: .cache
+          key: sources-${{ github.run_id }}
+          restore-keys: sources-
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - name: Collect leaderboard data
+        env:
+          # Optional. Without it the Artificial Analysis panel is simply absent;
+          # the other three sources carry the site on their own.
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+        run: npm run collect
+
+      - run: npm run build
+
+      # Skipped on pull requests: `configure-pages` fails outright until Pages
+      # is switched to the Actions source, and a red check for a setting the PR
+      # cannot change tells a reviewer nothing.
+      - if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    # Scoped to the job that actually publishes, so the build job — the one
+    # running third-party code from npm — holds read-only credentials.
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5

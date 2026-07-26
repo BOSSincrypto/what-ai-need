@@ -1,0 +1,21 @@
+{
+  "name": "what-ai-need",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Aggregated LLM leaderboards: benchmarks, arenas, pricing and analytics in one place.",
+  "scripts": {
+    "collect": "node scripts/collect.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
