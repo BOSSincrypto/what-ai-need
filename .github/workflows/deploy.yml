@@ -8,12 +8,13 @@ on:
   # a merge has already gone out to the site.
   pull_request:
     branches: [main]
-  # Twice a day. Epoch AI refreshes its export daily and LMArena publishes new
-  # Elo roughly weekly, so more often than this would mostly redeploy identical
-  # bytes; less often and a new frontier model could sit missing for a day.
+  # Weekly, Monday 05:25 UTC. LMArena republishes its Elo roughly weekly, so a
+  # Monday run picks up the previous week in one pass. Epoch AI does refresh
+  # daily, which means a newly benchmarked model can wait up to seven days to
+  # appear here — run the workflow manually when that matters.
   # Offset from the hour because scheduled runs queue behind everyone else's.
   schedule:
-    - cron: '25 5,17 * * *'
+    - cron: '25 5 * * 1'
   workflow_dispatch:
 
 permissions:

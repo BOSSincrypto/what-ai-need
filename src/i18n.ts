@@ -193,8 +193,8 @@ const DICT = {
   dataSources: { ru: 'Источники данных', en: 'Data sources' },
   sourceHealth: { ru: 'Состояние источников', en: 'Source health' },
   builtWith: {
-    ru: 'Сайт статический, собирается GitHub Actions и обновляется дважды в сутки.',
-    en: 'The site is static, built by GitHub Actions and refreshed twice a day.',
+    ru: 'Сайт статический, собирается GitHub Actions и обновляется раз в неделю.',
+    en: 'The site is static, built by GitHub Actions and refreshed once a week.',
   },
   openSource: { ru: 'Исходный код', en: 'Source code' },
 
